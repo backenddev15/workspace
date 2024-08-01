@@ -1,0 +1,35 @@
+version: '3.9'
+services:
+  mysql-server:
+    image: mysql:latest
+    container_name: mysql-server
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+    volumes:
+      - /Users/sun/mysql-data:/var/lib/mysql
+    ports:
+      - "3307:3306"
+
+  phpmyadmin-server:
+    image: phpmyadmin/phpmyadmin:latest
+    container_name: phpmyadmin-server
+    environment:
+      PMA_HOST: mysql-server
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: 1234
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql-server
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    ports:
+      - "6379:6379"
+
+  node-server: # ตั้งชื่อ container (เหมือน --name)
+    build: . # ตำแหน่ง dockerfile
+    ports:
+      - "8000:8000" # map port ออกมา เหมือน -p ใน docker run 
